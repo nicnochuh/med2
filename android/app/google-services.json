@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "1038225977569",
+    "project_id": "medtrack-8dc4a",
+    "storage_bucket": "medtrack-8dc4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038225977569:android:d714375575b8fdf0d447a0",
+        "android_client_info": {
+          "package_name": "com.example.med"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038225977569-ms1im0hdnknvg2tnq1joeruv1gs7ab7b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8TPzK467oB-GSwSQ9NWagXPAxt7R_5wg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038225977569-ms1im0hdnknvg2tnq1joeruv1gs7ab7b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1038225977569-eatps6h61s748o09pm5h425o21omg8lh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.med"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038225977569:android:19c6b56ad3be18a7d447a0",
+        "android_client_info": {
+          "package_name": "com.example.medtrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038225977569-ms1im0hdnknvg2tnq1joeruv1gs7ab7b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8TPzK467oB-GSwSQ9NWagXPAxt7R_5wg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038225977569-ms1im0hdnknvg2tnq1joeruv1gs7ab7b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1038225977569-eatps6h61s748o09pm5h425o21omg8lh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.med"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
