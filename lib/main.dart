@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:medtrack/components/notification_service.dart';
 import 'package:medtrack/pages/Reminder.dart';
 import 'package:medtrack/pages/firebase_options.dart';
+import 'package:medtrack/pages/intro.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Reminder(),
+      home: Intro(),
     );
   }
 }
