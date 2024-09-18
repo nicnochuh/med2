@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:medtrack/components/notification_service.dart';
-import 'package:medtrack/pages/Reminder.dart';
 import 'package:medtrack/pages/firebase_options.dart';
 import 'package:medtrack/pages/intro.dart';
 

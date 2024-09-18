@@ -21,7 +21,7 @@ class _ReminderState extends State<Reminder> {
   final TextEditingController medNameController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   DateTime _endDate = DateTime.now();
-  List<TimeOfDay> _selectedTimes = [];
+  final List<TimeOfDay> _selectedTimes = [];
   final List<Model> _reminderList = [];
   bool morning = false;
   bool afternoon = false;
@@ -403,7 +403,7 @@ class _ReminderState extends State<Reminder> {
                                           fontSize: 14,
                                         ),
                                       );
-                                    }).toList(),
+                                    }),
                                     Text(
                                       'Start Date: ${_formatDate(reminder.startDate)}',
                                       style: TextStyle(

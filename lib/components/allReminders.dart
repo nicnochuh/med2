@@ -47,7 +47,7 @@ class AllRemindersPage extends StatelessWidget {
                           fontSize: 14,
                         ),
                       );
-                    }).toList(),
+                    }),
                     Text(
                       'Start Date: ${_formatDate(reminder.startDate)}',
                       style: TextStyle(
