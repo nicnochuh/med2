@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/material.dart';
 import 'package:medtrack/components/notification_service.dart';
 import 'package:medtrack/pages/firebase_options.dart';
@@ -8,7 +8,7 @@ import 'package:medtrack/pages/intro.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService().init();
-
+  tz.initializeTimeZones(); // Initialize
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.android,
@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 
 /*
 import 'package:firebase_core/firebase_core.dart';

@@ -241,6 +241,16 @@ class _ReminderPageState extends State<ReminderPage> {
     });
   }
 
+  DateTime combineDateAndTime(DateTime date, TimeOfDay time) {
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+  }
+
   Future<void> _fetchReminders() async {
     QuerySnapshot snapshot =
         await FirebaseFirestore.instance.collection('reminders').get();
@@ -277,14 +287,19 @@ class _ReminderPageState extends State<ReminderPage> {
     int notificationId =
         DateTime.now().millisecondsSinceEpoch % 1000000; // range
 
-    _notificationService.scheduleDailyNotification(
+    /* _notificationService.scheduleNotification(
       notificationId, // Use the generated notification ID
       'Medication Reminder',
       'It\'s time to take ${newReminder.name}',
       newReminder.time,
       newReminder.endDate,
     );
-
+*/
+    _notificationService.scheduleDailyNotification(
+        combineDateAndTime(_endDate, _timeOfDay),
+        notificationId,
+        'medication reminder',
+        'It\'s time to take ${newReminder.name}');
     medNameController.clear();
   }
 
