@@ -175,7 +175,8 @@ class LoadingButtonState extends State<LoadingButton>
     } else {
       // Fallback or show error message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not send SMS: No SMS app available')),
+        const SnackBar(
+            content: Text('Could not send SMS: No SMS app available')),
       );
     }
   }
