@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:medtrack/components/drawtiles.dart';
 
 class drawer extends StatelessWidget {
-  final void Function()? onTap;
+  final void Function()? onhometap;
   final void Function()? onprofiletap;
   final void Function()? signout;
 
   const drawer(
       {super.key,
-      required this.onTap,
+      required this.onhometap,
       required this.onprofiletap,
       required this.signout});
 
@@ -33,7 +33,7 @@ class drawer extends StatelessWidget {
                   listtile(
                     icon: Icons.home,
                     text: 'H O M E',
-                    onTap: () => Navigator.pop(context),
+                    onTap: onhometap,
                   ),
 
                   listtile(

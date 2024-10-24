@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medtrack/components/drawer.dart';
-import 'package:medtrack/pages/Reminder.dart';
 import 'package:medtrack/pages/emergency.dart';
+import 'package:medtrack/pages/reminderPage.dart';
 import 'package:medtrack/pages/user.dart';
 
 class Homepage extends StatefulWidget {
@@ -22,7 +22,7 @@ class _HomepageState extends State<Homepage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const Reminder(),
+        builder: (context) => const ReminderPage(),
       ),
     );
   }
@@ -65,7 +65,7 @@ class _HomepageState extends State<Homepage> {
       ),
       backgroundColor: Colors.grey[300],
       drawer: drawer(
-        onTap: () => Navigator.pop(context),
+        onhometap: () => Navigator.pop(context),
         onprofiletap: gotouserpage,
         signout: signuserout,
       ),

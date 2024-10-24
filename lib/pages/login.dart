@@ -68,7 +68,6 @@ class _LoginState extends State<Login> {
               const SizedBox(
                 height: 20,
               ),
-
               const Icon(
                 Icons.lock,
                 size: 80,

@@ -1,23 +1,37 @@
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:permission_handler/permission_handler.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medtrack/components/notification_service.dart';
 import 'package:medtrack/pages/firebase_options.dart';
 import 'package:medtrack/pages/intro.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationService().init();
 
+  tz.initializeTimeZones();
+  await NotificationService().init();
+  await requestNotificationPermission();
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.android,
     );
-    //  await NotificationService().init();
 
     runApp(const MyApp());
   } catch (e) {
-    print("Error initializing app: $e");
+    print('Error initializing Firebase: $e');
+  }
+}
+
+Future<void> requestNotificationPermission() async {
+  if (await Permission.notification.request().isGranted) {
+    print('Notification permission granted');
+  } else {
+    print('Notification permission denied');
   }
 }
 

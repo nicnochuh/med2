@@ -1,6 +1,155 @@
+/* 
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore integration
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart'; // For date formatting
+
+class ReminderPage extends StatefulWidget {
+  const ReminderPage({super.key});
+
+  @override
+  _ReminderPageState createState() => _ReminderPageState();
+}
+
+class _ReminderPageState extends State<ReminderPage> {
+  TimeOfDay _selectedTime = TimeOfDay.now();
+  DateTime _selectedDate = DateTime.now();
+  final TextEditingController _medNameController = TextEditingController();
+
+  Future<void> _pickTime() async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    );
+    if (picked != null && picked != _selectedTime) {
+      setState(() {
+        _selectedTime = picked;
+      });
+    }
+  }
+
+  Future<void> _pickDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  void _addReminder() {
+    final medName = _medNameController.text;
+    final formattedTime = _selectedTime.format(context);
+    final formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
+
+    if (medName.isNotEmpty) {
+      FirebaseFirestore.instance.collection('reminders').add({
+        'medName': medName,
+        'time': formattedTime,
+        'date': formattedDate,
+      });
+
+      _medNameController.clear();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Reminder added!"),
+      ));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[300],
+      ),
+      backgroundColor: Colors.grey[300],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Reminders",
+                style: GoogleFonts.bebasNeue(
+                    textStyle: const TextStyle(fontSize: 60),
+                    color: Colors.grey[250])),
+            TextField(
+              controller: _medNameController,
+              decoration: const InputDecoration(
+                labelText: 'Enter med name',
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _pickTime,
+                    child: Text("Pick Time: ${_selectedTime.format(context)}"),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _pickDate,
+                    child: Text(
+                        "Pick Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}"),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _addReminder,
+              child: const Text("Add Reminder"),
+            ),
+            const SizedBox(height: 32),
+            const Text(
+              "Current Reminders",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('reminders')
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator();
+                  }
+                  return Container(
+                    padding: EdgeInsets.only(top: 3),
+                    child: ListView(
+                      children: snapshot.data!.docs.map((document) {
+                        // Use .get() instead of direct access, and handle missing field
+                        String medName =
+                            document.get('medName') ?? 'Unknown Medication';
+                        return ListTile(
+                          title: Text(medName),
+                          subtitle: Text('Reminder time: ${document['time']}'),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+*/
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:medtrack/components/notification_service.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 class ReminderPage extends StatefulWidget {
   const ReminderPage({super.key});
@@ -53,12 +202,15 @@ class _ReminderPageState extends State<ReminderPage> {
   DateTime _endDate = DateTime.now();
   final double horizontalPadding = 25;
   final List<Model> _reminderList = [];
+  final NotificationService _notificationService =
+      NotificationService(); // Instance of the notification service
 
   @override
   void initState() {
     super.initState();
     _fetchReminders();
-    // NotificationService().init(); // If you have a local notification service, uncomment this line
+    tz.initializeTimeZones(); // Initialize timezone data for scheduling notifications
+    _notificationService.init(); // Initialize notification service
   }
 
   void showTimePickerDialog() {
@@ -102,6 +254,7 @@ class _ReminderPageState extends State<ReminderPage> {
   }
 
   Future<void> _addReminder() async {
+    // Create a new reminder model
     Model newReminder = Model(
       id: '',
       name: medNameController.text,
@@ -109,7 +262,6 @@ class _ReminderPageState extends State<ReminderPage> {
       endDate: _endDate,
       time: _timeOfDay,
     );
-
     DocumentReference docRef = await FirebaseFirestore.instance
         .collection('reminders')
         .add(newReminder.toMap());
@@ -121,6 +273,18 @@ class _ReminderPageState extends State<ReminderPage> {
               id: docRef.id)); // Insert at the start of the list
     });
 
+// Schedule the notification
+    int notificationId =
+        DateTime.now().millisecondsSinceEpoch % 1000000; // 32 bit range
+
+    _notificationService.scheduleDailyNotification(
+      notificationId, // Use the generated notification ID
+      'Medication Reminder',
+      'It\'s time to take ${newReminder.name}',
+      newReminder.time,
+      newReminder.endDate,
+    );
+
     medNameController.clear();
   }
 
@@ -129,6 +293,10 @@ class _ReminderPageState extends State<ReminderPage> {
     setState(() {
       _reminderList.removeAt(index);
     });
+
+    // Cancel the notification
+    _notificationService
+        .cancelNotification(id.hashCode); // Cancel by the same hashCode used
   }
 
   String _formatDate(DateTime date) {
@@ -280,13 +448,12 @@ class _ReminderPageState extends State<ReminderPage> {
 }
 
 extension on Model {
-  Model copyWith({
-    String? id,
-    String? name,
-    DateTime? startDate,
-    DateTime? endDate,
-    TimeOfDay? time,
-  }) {
+  Model copyWith(
+      {String? id,
+      String? name,
+      DateTime? startDate,
+      DateTime? endDate,
+      TimeOfDay? time}) {
     return Model(
       id: id ?? this.id,
       name: name ?? this.name,
